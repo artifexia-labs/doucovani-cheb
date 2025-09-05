@@ -10,11 +10,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // --- Скрипт для Lightbox (просмотр дипломов) ---
 document.addEventListener('DOMContentLoaded', () => {
-    // В новой версии сайта класс .diploma-image заменен на .proof-image
     const imageClass = '.proof-image';
-
     const lightbox = document.getElementById('lightbox');
-    if (!lightbox) return; // Проверка на случай, если элемента нет
+    if (!lightbox) return;
     
     const lightboxImg = document.getElementById('lightbox-img');
     const diplomaImages = document.querySelectorAll(imageClass);
@@ -24,13 +22,13 @@ document.addEventListener('DOMContentLoaded', () => {
         image.addEventListener('click', () => {
             lightbox.style.display = 'block';
             lightboxImg.src = image.src;
-            document.body.style.overflow = 'hidden'; // Запретить скролл фона
+            document.body.style.overflow = 'hidden';
         });
     });
 
     function closeLightbox() {
         lightbox.style.display = 'none';
-        document.body.style.overflow = 'auto'; // Разрешить скролл фона
+        document.body.style.overflow = 'auto';
     }
 
     if(closeBtn) {
@@ -41,5 +39,21 @@ document.addEventListener('DOMContentLoaded', () => {
         if (e.target === lightbox) {
             closeLightbox();
         }
+    });
+});
+
+// --- НОВЫЙ СКРИПТ для FAQ (аккордеон) ---
+document.addEventListener('DOMContentLoaded', () => {
+    const faqItems = document.querySelectorAll('.faq-item');
+
+    faqItems.forEach(item => {
+        const question = item.querySelector('.faq-question');
+        question.addEventListener('click', () => {
+            const currentlyActive = document.querySelector('.faq-item.active');
+            if (currentlyActive && currentlyActive !== item) {
+                currentlyActive.classList.remove('active');
+            }
+            item.classList.toggle('active');
+        });
     });
 });
