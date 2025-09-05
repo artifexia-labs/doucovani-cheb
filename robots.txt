@@ -1,0 +1,6 @@
+# Разрешаем всем поисковым роботам сканировать весь сайт
+User-agent: *
+Disallow:
+
+# Указываем путь к карте сайта (создадим ее в следующем шаге)
+Sitemap: https://www.doucovani-cheb.cz/sitemap.xml
