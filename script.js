@@ -2,7 +2,7 @@
 document.addEventListener('DOMContentLoaded', () => {
     AOS.init({
         once: true,
-        offset: 80, // Запускать анимацию чуть раньше
+        offset: 80,
         duration: 1000,
         easing: 'ease-out-quad',
     });
@@ -42,7 +42,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
-// --- НОВЫЙ СКРИПТ для FAQ (аккордеон) ---
+// --- Скрипт для FAQ (аккордеон) ---
 document.addEventListener('DOMContentLoaded', () => {
     const faqItems = document.querySelectorAll('.faq-item');
 
@@ -55,5 +55,72 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             item.classList.toggle('active');
         });
+    });
+});
+
+// --- Скрипт для анимированного счетчика очков ---
+document.addEventListener("DOMContentLoaded", () => {
+    const counters = document.querySelectorAll('.stat-number');
+    const speed = 200; 
+
+    const animateCounter = (counter) => {
+        const target = +counter.getAttribute('data-target');
+        const updateCount = () => {
+            const count = +counter.innerText;
+            const increment = target / speed;
+
+            if (count < target) {
+                counter.innerText = Math.ceil(count + increment);
+                setTimeout(updateCount, 15);
+            } else {
+                counter.innerText = target;
+            }
+        };
+        updateCount();
+    };
+
+    const observer = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                animateCounter(entry.target);
+                observer.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.5 });
+
+    counters.forEach(counter => {
+        observer.observe(counter);
+    });
+});
+
+// --- Скрипт для модального окна контактов ---
+document.addEventListener('DOMContentLoaded', () => {
+    const contactModal = document.getElementById('contactModal');
+    // ИЗМЕНЕНИЕ: Выбираем обе кнопки для открытия окна
+    const openBtns = document.querySelectorAll('#openContactModal, #openContactModalNav');
+    const closeBtn = contactModal.querySelector('.modal-close');
+
+    function openModal(e) {
+        e.preventDefault(); // Предотвращаем переход по ссылке #
+        contactModal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal() {
+        contactModal.classList.remove('active');
+        document.body.style.overflow = 'auto';
+    }
+
+    // ИЗМЕНЕНИЕ: Вешаем обработчик на каждую кнопку
+    openBtns.forEach(btn => {
+        btn.addEventListener('click', openModal);
+    });
+    
+    closeBtn.addEventListener('click', closeModal);
+
+    contactModal.addEventListener('click', (e) => {
+        if (e.target === contactModal) {
+            closeModal();
+        }
     });
 });
