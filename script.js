@@ -22,7 +22,6 @@ document.addEventListener('DOMContentLoaded', () => {
         image.addEventListener('click', () => {
             lightbox.style.display = 'block';
             lightboxImg.src = image.src;
-            // Добавляем alt текст из кликнутого изображения в lightbox
             lightboxImg.alt = image.alt; 
             document.body.style.overflow = 'hidden';
         });
@@ -54,20 +53,17 @@ document.addEventListener('DOMContentLoaded', () => {
         question.addEventListener('click', () => {
             const isExpanded = question.getAttribute('aria-expanded') === 'true';
 
-            // Сначала закрываем все открытые элементы, кроме текущего
             const currentlyActiveItem = document.querySelector('.faq-item.active');
             if (currentlyActiveItem && currentlyActiveItem !== item) {
                 currentlyActiveItem.classList.remove('active');
                 currentlyActiveItem.querySelector('.faq-question').setAttribute('aria-expanded', 'false');
             }
-
-            // Переключаем текущий элемент
+            
             item.classList.toggle('active');
             question.setAttribute('aria-expanded', !isExpanded);
         });
     });
 });
-
 
 // --- Скрипт для анимированного счетчика очков ---
 document.addEventListener("DOMContentLoaded", () => {
@@ -136,4 +132,120 @@ document.addEventListener('DOMContentLoaded', () => {
             closeModal();
         }
     });
+});
+
+
+// --- GDPR Cookie Consent Logic ---
+document.addEventListener('DOMContentLoaded', () => {
+    const COOKIE_NAME = 'user_cookie_consent';
+    const banner = document.getElementById('cookie-consent-banner');
+    const settingsModal = document.getElementById('cookie-settings-modal');
+    
+    if (!banner || !settingsModal) return;
+
+    const acceptAllBtn = document.getElementById('cookie-accept-all');
+    const rejectAllBtn = document.getElementById('cookie-reject-all');
+    const settingsBtn = document.getElementById('cookie-settings');
+    const saveSettingsBtn = document.getElementById('cookie-save-settings');
+    const closeModalBtn = settingsModal.querySelector('.modal-close');
+
+    const consent = getCookie(COOKIE_NAME);
+
+    // Если нет cookie с согласием, показываем баннер
+    if (!consent) {
+        setTimeout(() => banner.classList.add('show'), 500);
+    } else {
+        // Если согласие есть, активируем скрипты
+        activateScripts(JSON.parse(consent));
+    }
+
+    // --- Event Listeners ---
+    acceptAllBtn.addEventListener('click', () => {
+        const preferences = { necessary: true, analytics: true };
+        saveConsent(preferences);
+    });
+
+    rejectAllBtn.addEventListener('click', () => {
+        const preferences = { necessary: true, analytics: false };
+        saveConsent(preferences);
+    });
+
+    settingsBtn.addEventListener('click', () => {
+        openSettingsModal();
+    });
+
+    saveSettingsBtn.addEventListener('click', () => {
+        const analyticsCheckbox = settingsModal.querySelector('input[name="analytics"]');
+        const preferences = {
+            necessary: true,
+            analytics: analyticsCheckbox.checked
+        };
+        saveConsent(preferences);
+        closeSettingsModal();
+    });
+    
+    closeModalBtn.addEventListener('click', closeSettingsModal);
+    settingsModal.addEventListener('click', (e) => {
+        if (e.target === settingsModal) {
+            closeSettingsModal();
+        }
+    });
+
+    // --- Functions ---
+    function saveConsent(preferences) {
+        setCookie(COOKIE_NAME, JSON.stringify(preferences), 365);
+        banner.classList.remove('show');
+        activateScripts(preferences);
+    }
+    
+    function activateScripts(preferences) {
+        const scripts = document.querySelectorAll('script[type="text/plain"]');
+        scripts.forEach(script => {
+            const category = script.getAttribute('data-cookie-category');
+            if (preferences[category]) {
+                const newScript = document.createElement('script');
+                // Копируем атрибуты
+                for (let i = 0; i < script.attributes.length; i++) {
+                    const attr = script.attributes[i];
+                    if (attr.name !== 'type' && attr.name !== 'data-cookie-category') {
+                        newScript.setAttribute(attr.name, attr.value);
+                    }
+                }
+                newScript.innerHTML = script.innerHTML; // Копируем внутренний код
+                script.parentNode.replaceChild(newScript, script);
+            }
+        });
+    }
+
+    function openSettingsModal() {
+        const currentConsent = getCookie(COOKIE_NAME) ? JSON.parse(getCookie(COOKIE_NAME)) : { analytics: true };
+        const analyticsCheckbox = settingsModal.querySelector('input[name="analytics"]');
+        analyticsCheckbox.checked = !!currentConsent.analytics;
+        settingsModal.classList.add('active');
+    }
+
+    function closeSettingsModal() {
+        settingsModal.classList.remove('active');
+    }
+
+    function setCookie(name, value, days) {
+        let expires = "";
+        if (days) {
+            const date = new Date();
+            date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+            expires = "; expires=" + date.toUTCString();
+        }
+        document.cookie = name + "=" + (value || "") + expires + "; path=/; SameSite=Lax";
+    }
+
+    function getCookie(name) {
+        const nameEQ = name + "=";
+        const ca = document.cookie.split(';');
+        for (let i = 0; i < ca.length; i++) {
+            let c = ca[i];
+            while (c.charAt(0) == ' ') c = c.substring(1, c.length);
+            if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
+        }
+        return null;
+    }
 });

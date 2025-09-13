@@ -1,13 +1,14 @@
 <!DOCTYPE html>
 <html lang="cs">
 <head>
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XS4XYKXZKN"></script>
-    <script>
+    <script type="text/plain" data-cookie-category="analytics" async src="https://www.googletagmanager.com/gtag/js?id=G-XS4XYKXZKN"></script>
+    <script type="text/plain" data-cookie-category="analytics">
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
       gtag('config', 'G-XS4XYKXZKN');
     </script>
+    
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
@@ -266,9 +267,53 @@
         </div>
     </div>
 
+    <div id="cookie-consent-banner" class="cookie-banner">
+        <div class="cookie-banner-content">
+            <p>Používáme cookies, abychom vám poskytli co nejlepší zážitek z našich webových stránek a analyzovali jejich návštěvnost. </p>
+            <div class="cookie-banner-actions">
+                <button id="cookie-accept-all" class="btn-cookie-accept">Přijmout vše</button>
+                <button id="cookie-reject-all" class="btn-cookie-secondary">Odmítnout vše</button>
+                <button id="cookie-settings" class="btn-cookie-secondary">Nastavení</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="cookie-settings-modal" class="modal-overlay">
+        <div class="modal-content">
+            <button class="modal-close">&times;</button>
+            <h3>Nastavení Cookies</h3>
+            <p class="modal-subtitle">Zde si můžete přizpůsobit své preference ohledně cookies. Nezbytné cookies nelze zakázat.</p>
+            
+            <div class="cookie-settings-options">
+                <div class="cookie-option">
+                    <div class="cookie-option-text">
+                        <strong>Nezbytné Cookies</strong>
+                        <p>Tyto cookies jsou vyžadovány pro základní funkčnost webu a jsou vždy povoleny.</p>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox" name="necessary" checked disabled>
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+                <div class="cookie-option">
+                    <div class="cookie-option-text">
+                        <strong>Analytické Cookies</strong>
+                        <p>Tyto cookies nám pomáhají analyzovat návštěvnost a zlepšovat naše služby (např. Google Analytics).</p>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox" name="analytics" checked>
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+            </div>
+            <button id="cookie-save-settings" class="btn">Uložit nastavení</button>
+        </div>
+    </div>
+
+
     <script src="https://kit.fontawesome.com/681d905963.js" crossorigin="anonymous" defer></script>
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js" defer></script>
     <script src="script.js" defer></script>
-    <script type="text/javascript" data-cmp-ab="1" src="https://cdn.consentmanager.net/delivery/autoblocking/33c27997e29e6.js" data-cmp-host="c.delivery.consentmanager.net" data-cmp-cdn="cdn.consentmanager.net" data-cmp-codesrc="0" defer></script>
+
 </body>
 </html>
