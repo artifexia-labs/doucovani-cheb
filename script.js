@@ -22,6 +22,8 @@ document.addEventListener('DOMContentLoaded', () => {
         image.addEventListener('click', () => {
             lightbox.style.display = 'block';
             lightboxImg.src = image.src;
+            // Добавляем alt текст из кликнутого изображения в lightbox
+            lightboxImg.alt = image.alt; 
             document.body.style.overflow = 'hidden';
         });
     });
@@ -42,21 +44,30 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
-// --- Скрипт для FAQ (аккордеон) ---
+// --- УЛУЧШЕННЫЙ Скрипт для FAQ (аккордеон с ARIA атрибутами) ---
 document.addEventListener('DOMContentLoaded', () => {
     const faqItems = document.querySelectorAll('.faq-item');
 
     faqItems.forEach(item => {
         const question = item.querySelector('.faq-question');
+        
         question.addEventListener('click', () => {
-            const currentlyActive = document.querySelector('.faq-item.active');
-            if (currentlyActive && currentlyActive !== item) {
-                currentlyActive.classList.remove('active');
+            const isExpanded = question.getAttribute('aria-expanded') === 'true';
+
+            // Сначала закрываем все открытые элементы, кроме текущего
+            const currentlyActiveItem = document.querySelector('.faq-item.active');
+            if (currentlyActiveItem && currentlyActiveItem !== item) {
+                currentlyActiveItem.classList.remove('active');
+                currentlyActiveItem.querySelector('.faq-question').setAttribute('aria-expanded', 'false');
             }
+
+            // Переключаем текущий элемент
             item.classList.toggle('active');
+            question.setAttribute('aria-expanded', !isExpanded);
         });
     });
 });
+
 
 // --- Скрипт для анимированного счетчика очков ---
 document.addEventListener("DOMContentLoaded", () => {
@@ -96,12 +107,13 @@ document.addEventListener("DOMContentLoaded", () => {
 // --- Скрипт для модального окна контактов ---
 document.addEventListener('DOMContentLoaded', () => {
     const contactModal = document.getElementById('contactModal');
-    // ИЗМЕНЕНИЕ: Выбираем обе кнопки для открытия окна
+    if (!contactModal) return;
+
     const openBtns = document.querySelectorAll('#openContactModal, #openContactModalNav');
     const closeBtn = contactModal.querySelector('.modal-close');
 
     function openModal(e) {
-        e.preventDefault(); // Предотвращаем переход по ссылке #
+        e.preventDefault();
         contactModal.classList.add('active');
         document.body.style.overflow = 'hidden';
     }
@@ -111,12 +123,13 @@ document.addEventListener('DOMContentLoaded', () => {
         document.body.style.overflow = 'auto';
     }
 
-    // ИЗМЕНЕНИЕ: Вешаем обработчик на каждую кнопку
     openBtns.forEach(btn => {
         btn.addEventListener('click', openModal);
     });
     
-    closeBtn.addEventListener('click', closeModal);
+    if (closeBtn) {
+        closeBtn.addEventListener('click', closeModal);
+    }
 
     contactModal.addEventListener('click', (e) => {
         if (e.target === contactModal) {
