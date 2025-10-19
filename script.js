@@ -13,7 +13,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const imageClass = '.proof-image';
     const lightbox = document.getElementById('lightbox');
     if (!lightbox) return;
-    
     const lightboxImg = document.getElementById('lightbox-img');
     const diplomaImages = document.querySelectorAll(imageClass);
     const closeBtn = document.querySelector('.lightbox-close');
@@ -22,7 +21,7 @@ document.addEventListener('DOMContentLoaded', () => {
         image.addEventListener('click', () => {
             lightbox.style.display = 'block';
             lightboxImg.src = image.src;
-            lightboxImg.alt = image.alt; 
+            lightboxImg.alt = image.alt;
             document.body.style.overflow = 'hidden';
         });
     });
@@ -46,19 +45,17 @@ document.addEventListener('DOMContentLoaded', () => {
 // --- УЛУЧШЕННЫЙ Скрипт для FAQ (аккордеон с ARIA атрибутами) ---
 document.addEventListener('DOMContentLoaded', () => {
     const faqItems = document.querySelectorAll('.faq-item');
-
     faqItems.forEach(item => {
         const question = item.querySelector('.faq-question');
-        
         question.addEventListener('click', () => {
             const isExpanded = question.getAttribute('aria-expanded') === 'true';
-
             const currentlyActiveItem = document.querySelector('.faq-item.active');
+
             if (currentlyActiveItem && currentlyActiveItem !== item) {
                 currentlyActiveItem.classList.remove('active');
                 currentlyActiveItem.querySelector('.faq-question').setAttribute('aria-expanded', 'false');
             }
-            
+
             item.classList.toggle('active');
             question.setAttribute('aria-expanded', !isExpanded);
         });
@@ -68,14 +65,12 @@ document.addEventListener('DOMContentLoaded', () => {
 // --- Скрипт для анимированного счетчика очков ---
 document.addEventListener("DOMContentLoaded", () => {
     const counters = document.querySelectorAll('.stat-number');
-    const speed = 200; 
-
+    const speed = 200;
     const animateCounter = (counter) => {
         const target = +counter.getAttribute('data-target');
         const updateCount = () => {
             const count = +counter.innerText;
             const increment = target / speed;
-
             if (count < target) {
                 counter.innerText = Math.ceil(count + increment);
                 setTimeout(updateCount, 15);
@@ -85,7 +80,6 @@ document.addEventListener("DOMContentLoaded", () => {
         };
         updateCount();
     };
-
     const observer = new IntersectionObserver((entries, observer) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
@@ -94,7 +88,6 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         });
     }, { threshold: 0.5 });
-
     counters.forEach(counter => {
         observer.observe(counter);
     });
@@ -104,7 +97,6 @@ document.addEventListener("DOMContentLoaded", () => {
 document.addEventListener('DOMContentLoaded', () => {
     const contactModal = document.getElementById('contactModal');
     if (!contactModal) return;
-
     const openBtns = document.querySelectorAll('#openContactModal, #openContactModalNav');
     const closeBtn = contactModal.querySelector('.modal-close');
 
@@ -122,7 +114,7 @@ document.addEventListener('DOMContentLoaded', () => {
     openBtns.forEach(btn => {
         btn.addEventListener('click', openModal);
     });
-    
+
     if (closeBtn) {
         closeBtn.addEventListener('click', closeModal);
     }
@@ -134,13 +126,12 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
-
 // --- GDPR Cookie Consent Logic ---
 document.addEventListener('DOMContentLoaded', () => {
     const COOKIE_NAME = 'user_cookie_consent';
     const banner = document.getElementById('cookie-consent-banner');
     const settingsModal = document.getElementById('cookie-settings-modal');
-    
+
     if (!banner || !settingsModal) return;
 
     const acceptAllBtn = document.getElementById('cookie-accept-all');
@@ -151,15 +142,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const consent = getCookie(COOKIE_NAME);
 
-    // Если нет cookie с согласием, показываем баннер
     if (!consent) {
         setTimeout(() => banner.classList.add('show'), 500);
     } else {
-        // Если согласие есть, активируем скрипты
         activateScripts(JSON.parse(consent));
     }
 
-    // --- Event Listeners ---
     acceptAllBtn.addEventListener('click', () => {
         const preferences = { necessary: true, analytics: true };
         saveConsent(preferences);
@@ -183,7 +171,7 @@ document.addEventListener('DOMContentLoaded', () => {
         saveConsent(preferences);
         closeSettingsModal();
     });
-    
+
     closeModalBtn.addEventListener('click', closeSettingsModal);
     settingsModal.addEventListener('click', (e) => {
         if (e.target === settingsModal) {
@@ -191,27 +179,25 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // --- Functions ---
     function saveConsent(preferences) {
         setCookie(COOKIE_NAME, JSON.stringify(preferences), 365);
         banner.classList.remove('show');
         activateScripts(preferences);
     }
-    
+
     function activateScripts(preferences) {
         const scripts = document.querySelectorAll('script[type="text/plain"]');
         scripts.forEach(script => {
             const category = script.getAttribute('data-cookie-category');
             if (preferences[category]) {
                 const newScript = document.createElement('script');
-                // Копируем атрибуты
                 for (let i = 0; i < script.attributes.length; i++) {
                     const attr = script.attributes[i];
                     if (attr.name !== 'type' && attr.name !== 'data-cookie-category') {
                         newScript.setAttribute(attr.name, attr.value);
                     }
                 }
-                newScript.innerHTML = script.innerHTML; // Копируем внутренний код
+                newScript.innerHTML = script.innerHTML;
                 script.parentNode.replaceChild(newScript, script);
             }
         });
@@ -247,5 +233,15 @@ document.addEventListener('DOMContentLoaded', () => {
             if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
         }
         return null;
+    }
+});
+
+// --- Новый скрипт: Анимация navbar при скролле ---
+window.addEventListener('scroll', () => {
+    const navbar = document.querySelector('.navbar');
+    if (window.scrollY > 50) {
+        navbar.classList.add('scrolled');
+    } else {
+        navbar.classList.remove('scrolled');
     }
 });
